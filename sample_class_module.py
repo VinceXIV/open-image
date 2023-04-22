@@ -1,5 +1,6 @@
 from cmath import nan
 from skimage.morphology import thin
+from digits_module import Digit
 import numpy as np
 import math
 import copy
@@ -8,20 +9,27 @@ import random
 
 
 class Sample:
-    def __init__(self, sample, description = "No description available"):
+    def __init__(self, sample, convertToAngle=True, description = "No description available"):
         self.sample = sample
         self.description = description
+
+        if(convertToAngle):
+            self.convertToAngle(inplace=True)
        
     def summarize(self):
         elementValues = self.getElementValues()
 
-        f, xarr = plt.subplots(nrows=1, ncols=2)
-        f.set_size_inches(w=7, h=3)
+        plt.hist(elementValues)
+        plt.title("Element Value Distribution")
+        plt.ylabel("element value")
+        plt.xlabel("frequency")
+        plt.show()
 
-        xarr[0].set_title("Histogram")
-        xarr[1].set_title("Boxplot")
-        xarr[0].hist(elementValues)
-        xarr[1].boxplot(elementValues)
+    def show(self, cmap=None):
+        plt.imshow(self.sample, cmap=cmap)
+
+    def get_digit_array(self):
+        return self.sample
 
     def getElementsCount(self):
         return len(self.getSampleElements())
@@ -35,7 +43,7 @@ class Sample:
         
         return sampleElements
 
-    def replaceValues(self, value = 0, replaceWith = math.nan, less=True, equal = True, greater = False):
+    def replaceValues(self, value = 0, replaceWith = math.nan, inplace=False, less=True, equal = True, greater = False):
         np_2d_array = copy.deepcopy(self.sample)
 
         for row in range(len(np_2d_array)):
@@ -47,7 +55,10 @@ class Sample:
                 ):
                     np_2d_array[row][col] = replaceWith
 
-        return np_2d_array
+        if(inplace):
+            self.sample = np_2d_array
+        else:
+            return np_2d_array
 
     def getElementValues(self):
         result = []
@@ -59,7 +70,7 @@ class Sample:
         result.sort()
         return result
 
-    def replaceElements(self, elementSet, newValue=math.nan, invertSelection=False):
+    def replaceElements(self, elementSet, newValue=math.nan, invertSelection=False, inplace=False):
         newSample = copy.deepcopy(self.sample.astype('float64'))
 
         if(not invertSelection):
@@ -81,7 +92,11 @@ class Sample:
                         except IndexError:
                             continue
 
-        return newSample
+        if(inplace):
+            self.sample = self.sample.astype('float64')
+            self.sample = newSample
+        else:
+            return newSample
 
     def getElementsByValue(self, value=0, less=True, equal = False, greater = False, limitElementCount=None):
 
@@ -110,7 +125,7 @@ class Sample:
         
         return elements
 
-    def convertToAngle(self, range_start=0, range_end=1, range_whole_number=False, thinify=False):
+    def convertToAngle(self, range_start=0, range_end=100, inplace=False, range_whole_number=False, thinify=False):
         nrows = int(self.sample.shape[0] - 1)
         ncols = int(self.sample.shape[1] - 1)
 
@@ -137,7 +152,10 @@ class Sample:
                     if(thinified[row][col] == 0):
                         result[row, col] = math.nan
 
-        return result
+        if(inplace):
+            self.sample = result
+        else:
+            return result
 
     def __createItem(self, row, col, sample):
         a = sample[row, col]
