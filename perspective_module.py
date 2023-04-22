@@ -203,14 +203,10 @@ class Perspective:
     def showElement(self, element=None):
         element = element if element != None else self.frameOfReference
 
-        f, xarr = plt.subplots(nrows=1, ncols=2)
-        f.set_size_inches(w=10, h=10)
-
         foRefCopy = copy.deepcopy(self.sampleSpace)
-        foRefCopy[element[0]][element[1]]= -50
+        foRefCopy[element[0]][element[1]]= -10000
 
-        xarr[0].imshow(self.sampleSpace)
-        xarr[1].imshow(foRefCopy)       
+        plt.imshow(foRefCopy)       
 
     def showPerspectiveCount(self):
         return sum(self.angleDataFrame.count())
