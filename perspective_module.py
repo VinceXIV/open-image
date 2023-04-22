@@ -7,7 +7,7 @@ import copy
 from compare_module import Compare
 
 class Perspective:
-    def __init__(self, refElement, sampleImage, usePlainDataframes=False, includeDistance=False, includeDistanceBy="add", limitDistance=None, limitPixels=None, useRanks=False):
+    def __init__(self, refElement, sampleImage, usePlainDataframes=False, includeDistance=True, includeDistanceBy="add", limitDistance=None, limitPixels=None, useRanks=False):
         self.frameOfReference = refElement
         self.sampleSpace = sampleImage
         self.includeDistance = includeDistance
