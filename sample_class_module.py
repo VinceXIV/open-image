@@ -9,12 +9,12 @@ import random
 
 
 class Sample:
-    def __init__(self, sample, convertToAngle=True, description = "No description available"):
+    def __init__(self, sample, convertToAngle=True, thinify=False, description = "No description available"):
         self.sample = sample
         self.description = description
 
         if(convertToAngle):
-            self.convertToAngle(inplace=True)
+            self.convertToAngle(inplace=True, thinify=thinify)
        
     def summarize(self):
         elementValues = self.getElementValues()
