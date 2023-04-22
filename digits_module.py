@@ -15,8 +15,16 @@ class Digit:
                 "Expected a value between 0 - 9. You provided " + str(digit)
             )
         else:
+            existing_digits = self.data.loc[self.data["digit"] == digit]
+            if(index > len(existing_digits)):
+                raise ValueError(
+                    '''
+                        We only have {count} digits with value {digit} as at now, please pick an index value between 0 and {upper_limit}
+                    '''.format(count = len(existing_digits), digit=digit, upper_limit = len(existing_digits) - 1)
+                )
+            
             return np.array(
-                        self.data.loc[self.data["digit"] == digit].iloc[index, 1:]
+                        existing_digits.iloc[index, 1:]
                     ).reshape((28, 28))
         
     def show(self, digit=None):
