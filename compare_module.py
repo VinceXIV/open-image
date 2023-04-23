@@ -4,6 +4,7 @@ import math
 import copy
 import matplotlib.pyplot as plt
 from scipy.optimize import linear_sum_assignment
+from transformation_module import Transformation
 
 class Compare:
     def __init__(self, comparisonDataframe, defaultMatchElement = None):
@@ -13,6 +14,12 @@ class Compare:
         self.comparisonDataframe = self.__replaceNanWithWorst(comparisonDataframe)
         self.cost = self.__makeSquared(self.__replaceNanWithWorst(comparisonDataframe))
         self.row_match, self.col_match = self.__getMatchDict()  
+
+    def getTransformation(self, match = 'col'):
+        if(match == 'col'):
+            return Transformation(self.col_match)
+        elif(match == 'row'):
+            return Transformation(self.row_match)
 
     def getRefSampleElements(self):
         return list(self.comparisonDataframe.columns)
@@ -24,7 +31,7 @@ class Compare:
 
         if(refElement == None):
             refElement = self.defaultMatchElement
-            
+
         canvas = self.__createCanvas()
 
         # We are expecting dictionary with column and row index in the form (int, int)
