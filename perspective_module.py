@@ -125,7 +125,7 @@ class Perspective:
         usePlainDataframes = self.usePlainDataframes if usePlainDataframes == None else usePlainDataframes
 
         comparisionDataframe = self.getComparisonDataframe(other, usePlainDataframes)
-        return Compare(comparisionDataframe)
+        return Compare(comparisionDataframe, self.getElement())
     
     def getElement(self):
         return self.frameOfReference

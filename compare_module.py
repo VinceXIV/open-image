@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 from scipy.optimize import linear_sum_assignment
 
 class Compare:
-    def __init__(self, comparisonDataframe):
+    def __init__(self, comparisonDataframe, defaultMatchElement = None):
+        self.defaultMatchElement = defaultMatchElement
         self.ncols = len(comparisonDataframe.columns)
         self.nrows = len(comparisonDataframe)
         self.comparisonDataframe = self.__replaceNanWithWorst(comparisonDataframe)
@@ -19,11 +20,11 @@ class Compare:
     def getTestSampleElements(self):
         return list(self.comparisonDataframe.index)     
 
-    def showMatch(self, refElement, method="col"):
-        # print("Currently using reference='"+reference+"', method='"+method+"'. reference can be 'big', 'row', or 'col'. On the other hand, method can be 'Total Distance', 'Average Distance', or 'Median Distance'")
+    def showMatch(self, refElement = None, method="col"):
 
-        # reference = "row" if (reference=="row" or (reference == "big" and self.nrows >= self.ncols) or (reference == "small" and self.nrows <= self.ncols)) else "column"
-
+        if(refElement == None):
+            refElement = self.defaultMatchElement
+            
         canvas = self.__createCanvas()
 
         # We are expecting dictionary with column and row index in the form (int, int)
