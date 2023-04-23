@@ -126,6 +126,9 @@ class Perspective:
 
         comparisionDataframe = self.getComparisonDataframe(other, usePlainDataframes)
         return Compare(comparisionDataframe)
+    
+    def getElement(self):
+        return self.frameOfReference
 
     def getDistanceRanks(self):
         return self.__convertToRanks(self.distanceSet, self.distanceDataFrame)
