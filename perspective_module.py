@@ -121,7 +121,8 @@ class Perspective:
 
             return angle.add(distance).add(direction)
 
-    def compare(self, other, usePlainDataframes=None):
+    def compare(self, other = None, usePlainDataframes=None):
+        other = self if other == None else other
         usePlainDataframes = self.usePlainDataframes if usePlainDataframes == None else usePlainDataframes
 
         comparisionDataframe = self.getComparisonDataframe(other, usePlainDataframes)
