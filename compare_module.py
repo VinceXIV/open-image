@@ -11,18 +11,24 @@ class Compare:
         self.nrows = len(comparisonDataframe)
         self.comparisonDataframe = self.__replaceNanWithWorst(comparisonDataframe)
         self.cost = self.__makeSquared(self.__replaceNanWithWorst(comparisonDataframe))
-        self.row_match, self.col_match = self.__getMatchDict()        
+        self.row_match, self.col_match = self.__getMatchDict()  
 
-    def showMatch(self, reference="row", method="Total Distance"):
+    def getRefSampleElements(self):
+        return list(self.comparisonDataframe.columns)
+
+    def getTestSampleElements(self):
+        return list(self.comparisonDataframe.index)     
+
+    def showMatch(self, refElement, method="col"):
         # print("Currently using reference='"+reference+"', method='"+method+"'. reference can be 'big', 'row', or 'col'. On the other hand, method can be 'Total Distance', 'Average Distance', or 'Median Distance'")
 
-        reference = "row" if (reference=="row" or (reference == "big" and self.nrows >= self.ncols) or (reference == "small" and self.nrows <= self.ncols)) else "column"
+        # reference = "row" if (reference=="row" or (reference == "big" and self.nrows >= self.ncols) or (reference == "small" and self.nrows <= self.ncols)) else "column"
 
         canvas = self.__createCanvas()
-        
+
         # We are expecting dictionary with column and row index in the form (int, int)
         if(str(type(self.cost.columns[0][0])).__contains__("int")):
-            canvas = self.__paintCanvas(canvas=canvas, reference=reference, method=method)
+            canvas = self.__paintCanvas(canvas=canvas, refElement=refElement, method=method)
 
         plt.imshow(canvas)
 
@@ -221,30 +227,39 @@ class Compare:
         size = self.__getCanvasSize()
         return [[value]*size for i in range(size)]
 
-    def __paintCanvas(self, canvas, reference, method):
-        if(method == "Total Distance"):
-            if(reference=="row"):
-                for elementMatch in self.row_match:
-                    canvas[elementMatch[1]][elementMatch[0]] = np.sum(self.__getNeighborPerformance(element=elementMatch, matchDict=self.row_match))
-            elif(reference=="column"):
-                for elementMatch in self.col_match:
-                    canvas[elementMatch[1]][elementMatch[0]] = np.sum(self.__getNeighborPerformance(element=elementMatch, matchDict=self.col_match))                    
-        elif(method == "Average Distance"):
-            if(reference=="row"):
-                for elementMatch in self.row_match:
-                    canvas[elementMatch[1]][elementMatch[0]] = np.average(self.__getNeighborPerformance(element=elementMatch, matchDict=self.row_match))
-            elif(reference=="column"):
-                for elementMatch in self.col_match:
-                    canvas[elementMatch[1]][elementMatch[0]] = np.average(self.__getNeighborPerformance(element=elementMatch, matchDict=self.col_match))
-        elif(method == "Median Distance"):
-            if(reference=="row"):
-                for elementMatch in self.row_match:
-                    canvas[elementMatch[1]][elementMatch[0]] = np.median(self.__getNeighborPerformance(element=elementMatch, matchDict=self.row_match))
-            elif(reference=="column"):
-                for elementMatch in self.col_match:
-                    canvas[elementMatch[1]][elementMatch[0]] = np.median(self.__getNeighborPerformance(element=elementMatch, matchDict=self.col_match))
-        else:
-            raise ValueError("Expected reference to either be; 'row' or 'col', and method to either be 'Total Cost', 'Average Cost', 'Total Distance', 'Average Distance', or 'Median Distance'")
+    def __paintCanvas(self, canvas, refElement, method):
+        matchInfo = None
+        if(method == "row"):
+            matchInfo = self.comparisonDataframe.loc[refElement, :]
+        elif(method == "col"):
+            matchInfo = self.comparisonDataframe[refElement]
+
+
+        for element in matchInfo.index:
+            canvas[element[1]][element[0]] = matchInfo[element]
+        # if(method == "Total Distance"):
+        #     if(reference=="row"):
+        #         for elementMatch in self.row_match:
+        #             canvas[elementMatch[1]][elementMatch[0]] = np.sum(self.__getNeighborPerformance(element=elementMatch, matchDict=self.row_match))
+        #     elif(reference=="column"):
+        #         for elementMatch in self.col_match:
+        #             canvas[elementMatch[1]][elementMatch[0]] = np.sum(self.__getNeighborPerformance(element=elementMatch, matchDict=self.col_match))                    
+        # elif(method == "Average Distance"):
+        #     if(reference=="row"):
+        #         for elementMatch in self.row_match:
+        #             canvas[elementMatch[1]][elementMatch[0]] = np.average(self.__getNeighborPerformance(element=elementMatch, matchDict=self.row_match))
+        #     elif(reference=="column"):
+        #         for elementMatch in self.col_match:
+        #             canvas[elementMatch[1]][elementMatch[0]] = np.average(self.__getNeighborPerformance(element=elementMatch, matchDict=self.col_match))
+        # elif(method == "Median Distance"):
+        #     if(reference=="row"):
+        #         for elementMatch in self.row_match:
+        #             canvas[elementMatch[1]][elementMatch[0]] = np.median(self.__getNeighborPerformance(element=elementMatch, matchDict=self.row_match))
+        #     elif(reference=="column"):
+        #         for elementMatch in self.col_match:
+        #             canvas[elementMatch[1]][elementMatch[0]] = np.median(self.__getNeighborPerformance(element=elementMatch, matchDict=self.col_match))
+        # else:
+            # raise ValueError("Expected reference to either be; 'row' or 'col', and method to either be 'Total Cost', 'Average Cost', 'Total Distance', 'Average Distance', or 'Median Distance'")
 
         return canvas
 
