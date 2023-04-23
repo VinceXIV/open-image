@@ -390,7 +390,7 @@ class Perspective:
         for col in colVals:
             for row in rowVals:
                 if(not math.isnan(dataFrame[col][row])):
-                    result[(col, row)] = dataFrame[col][row]
+                    result[(row, col)] = dataFrame[col][row]
 
         return result
 
