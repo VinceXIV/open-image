@@ -27,8 +27,8 @@ class Transformation:
         b = round(params1["y1"], 4)
         c = round(params2["x1"], 4)
         d = round(params2["y1"], )
-        k1 = round(params1["Intercept"], 0)
-        k2 = round(params2["Intercept"], 0)
+        k1 = round(params1["Intercept"], 4)
+        k2 = round(params2["Intercept"], 4)
 
         return [[a, b], [c, d]], [k1, k2]
 
