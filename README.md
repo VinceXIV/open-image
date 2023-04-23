@@ -1,6 +1,6 @@
 # open-image
 
-Open *the how-it-works.ipynb* file to see a demonstration of some of the things that have been done in this work
+Open *the how-it-works.ipynb* file to see a demonstration of some of the things that have been done in this work. To run the project on your machine use the following steps
 
 ## Setup
 1. install virtualenv; `pip3 install virtualenv`
