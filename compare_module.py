@@ -29,7 +29,8 @@ class Compare:
         # We are expecting dictionary with column and row index in the form (int, int)
         if(str(type(self.cost.columns[0][0])).__contains__("int")):
             canvas = self.__paintCanvas(canvas=canvas, refElement=refElement, method=method)
-
+        
+        canvas = np.transpose(canvas)
         plt.imshow(canvas)
 
     def summarizeComparisonDataframe(self):
